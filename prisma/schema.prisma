@@ -26,4 +26,6 @@ model Todo {
   content String
   userid  Int
   user    User   @relation(fields: [userid], references: [id])
+  tags    String[]
+  status  String
 }
