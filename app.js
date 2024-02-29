@@ -1,7 +1,14 @@
 const express = require("express");
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
+const session = require('express-session');
 
+
+app.use(session({
+  secret: 'xjoewnfas45a2s4df5c',
+  resave: false,
+  saveUninitialized: false,
+}));
 app.use(("*"),express.urlencoded({ extended: true }));
 app.use(("*"),express.json());
 
