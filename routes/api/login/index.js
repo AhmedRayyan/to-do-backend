@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
+const bcrypt = require('bcrypt');
 
 
 router.post('/', async (req, res) => { 
@@ -9,12 +10,11 @@ router.post('/', async (req, res) => {
     const { email, password } = req.body;
     const user = await prisma.user.findUnique({
         where: {
-            email: email,
-            password: password
+            email: email
         }
     });
-    
-    if (user != null && user.password === password) {
+    console.log(await bcrypt.compare(password,user.password));
+    if (user != null && (await bcrypt.compare(password,user.password))) {
         res.json({ message: 'Logged In' });
         return;
     }
