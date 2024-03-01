@@ -4,13 +4,21 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
+const emailregex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/gi
+
 
 
 
 router.post('/', async (req, res) => {
 
-    if (req.body.email && req.body.password && req.body.name) {
+    if (req.body.email && req.body.password && req.body.name) { // Check if email, password & name is provided
 
+        // Check if email is valid
+        if (!emailregex.test(req.body.email)) {
+            res.json({ res: "Please Provide a Valid Email" });
+            return;
+        }
+        // Check if Email Already Exists
         await prisma.user.findUnique({
             where: {
                 email: req.body.email
@@ -19,6 +27,7 @@ router.post('/', async (req, res) => {
             if (user) {
                 res.json({ res: "User Already Exists, You Can Sign in" });
             }
+            // If Email Doesn't Exist, Hash The Password Then Create User
             else {
                 bcrypt.hash(req.body.password, saltRounds, async function (err, hash) {
                     await prisma.user.create({
@@ -40,11 +49,12 @@ router.post('/', async (req, res) => {
         });
 
 
-        
 
-        
+
+
     }
-    
+
+// If Email, Password or Name is not provided
     else {
         res.json({ res: "Please Provide Your Name, Email & Password to Signup" });
     }
