@@ -3,27 +3,28 @@ const router = express.Router();
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 
 router.post('/', async (req, res) => { 
-    console.log(req.body);
-    const { email, password } = req.body;
+    const {email, password} = req.body;
     const user = await prisma.user.findUnique({
         where: {
-            email: email
+        email: email
         }
     });
-    console.log(await bcrypt.compare(password,user.password));
-    if (user != null && (await bcrypt.compare(password,user.password))) {
-        res.json({ message: 'Logged In' , data : {user: user.name, email: user.email}});
-        return;
+    if (user) {
+        const match = await bcrypt.compare(password, user.password);
+        if (match) {
+            const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET);
+            res.json({message:"Logged In Successfully", accessToken: accessToken });
+        } else {
+        res.status(401).json({message: "Invalid Password"});
+        }
+    } else {
+        res.status(404).json({message: "Invalid Email Or Password"});
     }
-   
-    else {
-        res.json({ message : 'Invalid Email Or Password' });
-    }
-}
-)
+});
 
 
 module.exports = router;
