@@ -8,6 +8,73 @@ const emailregex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/gi
 
 
 
+/**
+ * @swagger
+ * /signup:
+ *   post:
+ *     summary: User Signup
+ *     description: Registers a new user.
+ *     consumes:
+ *       - application/json
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: body
+ *         name: userData
+ *         description: User information for signup.
+ *         schema:
+ *           type: object
+ *           properties:
+ *             name:
+ *               type: string
+ *               description: User's name.
+ *             email:
+ *               type: string
+ *               description: User's email address.
+ *             password:
+ *               type: string
+ *               description: User's password.
+ *         required:
+ *           - name
+ *           - email
+ *           - password
+ *     responses:
+ *       200:
+ *         description: User successfully registered.
+ *         schema:
+ *           type: object
+ *           properties:
+ *             user:
+ *               type: string
+ *               description: ID of the newly created user.
+ *             success:
+ *               type: boolean
+ *               description: Indicates whether the operation was successful.
+ *       400:
+ *         description: Invalid request body.
+ *         schema:
+ *           type: object
+ *           properties:
+ *             res:
+ *               type: string
+ *               description: Error message indicating invalid request.
+ *       409:
+ *         description: User already exists.
+ *         schema:
+ *           type: object
+ *           properties:
+ *             res:
+ *               type: string
+ *               description: Error message indicating user already exists.
+ *       500:
+ *         description: Internal server error.
+ *         schema:
+ *           type: object
+ *           properties:
+ *             success:
+ *               type: boolean
+ *               description: Indicates whether the operation was successful.
+ */
 
 router.post('/', async (req, res) => {
 
