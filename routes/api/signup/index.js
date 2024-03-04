@@ -37,7 +37,7 @@ router.post('/', async (req, res) => {
                             password: hash
                         }
                     }).then((user) => {
-                        res.json({ user: user, success: true });
+                        res.json({ user: user.id, success: true });
                     }).catch((err) => {
                         res.json({ success: false });
                         console.log(err);

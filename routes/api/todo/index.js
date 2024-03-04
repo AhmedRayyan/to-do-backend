@@ -5,11 +5,65 @@ const prisma = new PrismaClient();
 const authenticateToken = require("../../../middlewares/Auth");
 
 
-router.get('/:id',authenticateToken, async (req, res) => { 
+// Create a todo
+router.post('/', authenticateToken, async (req, res) => {
+    const { conntent } = req.body;
+    const todo = await prisma.todo.create({
+        data: {
+            content: conntent,
+            user: {
+                connect: {
+                    id: req.user.id
+                }
+            }
+        }
+    });
+    res.json(todo);
+});
+
+
+// Delete a todo
+router.delete('/', authenticateToken, async (req, res) => {
+    const todo = await prisma.todo.delete({
+        where: {
+            id: parseInt(req.body.id),
+            user: {
+                id: req.user.id
+            }
+        }
+    });
+    res.json(todo);
+});
+
+
+// Update a todo by id
+router.put('/:id', authenticateToken, async (req, res) => {
+    const { content,status,tags } = req.body;
+    const todo = await prisma.todo.update({
+        where: {
+            id: parseInt(req.params.id)
+        },
+        data: {
+            content: content,
+            status: status,
+            tags: tags,
+            user: {
+                connect: {
+                    id: req.user.id
+                }
+            }
+        }
+    });
+    res.json(todo);
+});
+
+
+// Get todo by id
+router.get('/:id', authenticateToken, async (req, res) => {
     const todo = await prisma.todo.findUnique({
         where: {
             userid: req.user.id,
-            id : parseInt(req.params.id)
+            id: parseInt(req.params.id)
         }
     });
     if (!todo) {
@@ -17,5 +71,6 @@ router.get('/:id',authenticateToken, async (req, res) => {
     }
     res.json(todo);
 });
+
 
 module.exports = router;
