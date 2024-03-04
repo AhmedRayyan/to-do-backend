@@ -11,6 +11,7 @@ router.post('/', authenticateToken, async (req, res) => {
     const todo = await prisma.todo.create({
         data: {
             content: conntent,
+            tags: req.body.tags || null,
             user: {
                 connect: {
                     id: req.user.id
