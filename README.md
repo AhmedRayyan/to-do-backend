@@ -20,7 +20,7 @@ First Make Sure You Have Node.js Runtime, PostgreSQL & GIT Installed On Your Sys
 1) Run The Following
  
 ```
-git clone https://github.com/AhmedRayyan/todo-backend.git
+git clone https://github.com/AhmedRayyan/to-do-backend.git
 ```
 
 2) Then Go to todo-backend Folder and Run
