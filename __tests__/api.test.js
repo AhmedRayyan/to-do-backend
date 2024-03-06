@@ -18,6 +18,17 @@ describe('Test API endpoints', () => {
         expect(response.body).toEqual({ message: "Not Found" });
     });
 
+    it('Should return 401 when invalid or no token is provided', async () => {
+        // Setup
+        const token = 'invalid_token';
+        
+        // Exercise
+        const response = await request(app).get('/api/todos').set('Authorization', `Bearer ${token}`);
+        
+        // Verify
+        expect(response.status).toBe(401);
+    });
+
 
 
 });

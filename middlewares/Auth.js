@@ -8,7 +8,7 @@ function authenticateToken(req, res, next) {
     if (token == null) return res.sendStatus(401);
 
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, user) => {
-        if (err) return res.sendStatus(403);
+        if (err) return res.sendStatus(401);
 
         // Fetch user data from the database using Prisma
         const userData = await prisma.user.findUnique({
